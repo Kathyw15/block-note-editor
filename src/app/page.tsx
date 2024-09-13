@@ -13,6 +13,8 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
+import Highlight from "@tiptap/extension-highlight";
+import Superscript from "@tiptap/extension-superscript";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import Placeholder from "@tiptap/extension-placeholder";
 import { SnippetExtension } from "@/components/SnippetExtension";
@@ -55,6 +57,8 @@ export default function Home() {
       TableRow,
       TableHeader,
       CustomTableCell,
+      Highlight,
+      Superscript,
       GlobalDragHandle.configure({
         dragHandleWidth: 24,
         scrollTreshold: 50,

@@ -1,5 +1,3 @@
-// components/EditorToolbar.tsx
-
 import { Button } from "@/components/ui/button";
 import {
   Bold,
@@ -15,6 +13,8 @@ import {
   AlignRight,
   AlignJustify,
   Minus,
+  Highlighter,
+  Superscript,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -41,6 +41,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, addBlock }) => {
 
   return (
     <div className="flex items-center p-2 bg-gray-50 border-b">
+      {/* Text Formatting */}
       <Button
         variant="ghost"
         size="sm"
@@ -67,7 +68,24 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, addBlock }) => {
           }`}
         />
       </Button>
+      <Button
+        variant={editor.isActive("highlight") ? "secondary" : "ghost"}
+        size="sm"
+        onClick={() => editor.chain().focus().toggleHighlight().run()}
+      >
+        <Highlighter className="h-4 w-4" />
+      </Button>
+      <Button
+        variant={editor.isActive("superscript") ? "secondary" : "ghost"}
+        size="sm"
+        onClick={() => editor.chain().focus().toggleSuperscript().run()}
+      >
+        <Superscript className="h-4 w-4" />
+      </Button>
+
       <div className="border-l border-gray-300 h-6 mx-2" />
+
+      {/* Headings */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" className="flex items-center">
@@ -87,7 +105,10 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, addBlock }) => {
           ))}
         </DropdownMenuContent>
       </DropdownMenu>
+
       <div className="border-l border-gray-300 h-6 mx-2" />
+
+      {/* Lists */}
       <Button
         variant="ghost"
         size="sm"
@@ -114,7 +135,66 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, addBlock }) => {
           }`}
         />
       </Button>
+
       <div className="border-l border-gray-300 h-6 mx-2" />
+
+      {/* Alignment */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setTextAlign("left").run()}
+        disabled={!editor.can().setTextAlign("left")}
+        className={editor.isActive({ textAlign: "left" }) ? "bg-gray-200" : ""}
+      >
+        <AlignLeft className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setTextAlign("center").run()}
+        disabled={!editor.can().setTextAlign("center")}
+        className={
+          editor.isActive({ textAlign: "center" }) ? "bg-gray-200" : ""
+        }
+      >
+        <AlignCenter className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setTextAlign("right").run()}
+        disabled={!editor.can().setTextAlign("right")}
+        className={editor.isActive({ textAlign: "right" }) ? "bg-gray-200" : ""}
+      >
+        <AlignRight className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+        disabled={!editor.can().setTextAlign("justify")}
+        className={
+          editor.isActive({ textAlign: "justify" }) ? "bg-gray-200" : ""
+        }
+      >
+        <AlignJustify className="h-4 w-4" />
+      </Button>
+
+      <div className="border-l border-gray-300 h-6 mx-2" />
+
+      {/* Horizontal Rule */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => editor.chain().focus().setHorizontalRule().run()}
+        disabled={!editor.can().setHorizontalRule()}
+      >
+        <Minus className="h-4 w-4" />
+      </Button>
+
+      <div className="border-l border-gray-300 h-6 mx-2" />
+
+      {/* Additional Elements */}
       <Button
         variant="ghost"
         size="sm"
@@ -197,7 +277,7 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, addBlock }) => {
               !editor.can().setCellAttribute("backgroundColor", "#FAF594")
             }
           >
-            Set cell attribute
+            Set Cell Attribute
           </DropdownMenuItem>
           <DropdownMenuItem
             onSelect={() => editor.chain().focus().mergeCells().run()}
@@ -213,54 +293,6 @@ const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, addBlock }) => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().setTextAlign("left").run()}
-        disabled={!editor.can().setTextAlign("left")}
-        className={editor.isActive({ textAlign: "left" }) ? "bg-gray-200" : ""}
-      >
-        <AlignLeft className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().setTextAlign("center").run()}
-        disabled={!editor.can().setTextAlign("center")}
-        className={
-          editor.isActive({ textAlign: "center" }) ? "bg-gray-200" : ""
-        }
-      >
-        <AlignCenter className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().setTextAlign("right").run()}
-        disabled={!editor.can().setTextAlign("right")}
-        className={editor.isActive({ textAlign: "right" }) ? "bg-gray-200" : ""}
-      >
-        <AlignRight className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().setTextAlign("justify").run()}
-        disabled={!editor.can().setTextAlign("justify")}
-        className={
-          editor.isActive({ textAlign: "justify" }) ? "bg-gray-200" : ""
-        }
-      >
-        <AlignJustify className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={() => editor.chain().focus().setHorizontalRule().run()}
-        disabled={!editor.can().setHorizontalRule()}
-      >
-        <Minus className="h-4 w-4" />
-      </Button>
     </div>
   );
 };

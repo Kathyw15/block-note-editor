@@ -306,3 +306,9 @@
 .item.is-selected {
   border-color: #000;
 }
+
+/* Highlight */
+.ProseMirror mark {
+  background-color: #fef3c7;
+  padding: 0 0.1em;
+}
