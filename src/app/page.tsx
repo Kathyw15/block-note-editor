@@ -9,6 +9,7 @@ import TableRow from "@tiptap/extension-table-row";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import Underline from "@tiptap/extension-underline";
+import TextAlign from "@tiptap/extension-text-align";
 import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import Placeholder from "@tiptap/extension-placeholder";
 import { Button } from "@/components/ui/button";
@@ -21,6 +22,10 @@ import {
   Image as ImageIcon,
   ChevronDown,
   TableIcon,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
 } from "lucide-react";
 import { SnippetExtension } from "@/components/SnippetExtension";
 import {
@@ -61,6 +66,10 @@ export default function Home() {
       GlobalDragHandle.configure({
         dragHandleWidth: 24,
         scrollTreshold: 50,
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+        alignments: ["left", "center", "right", "justify"],
       }),
     ],
     content: "",
@@ -274,6 +283,50 @@ export default function Home() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().setTextAlign("left").run()}
+              className={
+                editor.isActive({ textAlign: "left" }) ? "bg-gray-200" : ""
+              }
+            >
+              <AlignLeft className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                editor.chain().focus().setTextAlign("center").run()
+              }
+              className={
+                editor.isActive({ textAlign: "center" }) ? "bg-gray-200" : ""
+              }
+            >
+              <AlignCenter className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().setTextAlign("right").run()}
+              className={
+                editor.isActive({ textAlign: "right" }) ? "bg-gray-200" : ""
+              }
+            >
+              <AlignRight className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() =>
+                editor.chain().focus().setTextAlign("justify").run()
+              }
+              className={
+                editor.isActive({ textAlign: "justify" }) ? "bg-gray-200" : ""
+              }
+            >
+              <AlignJustify className="h-4 w-4" />
+            </Button>
           </div>
         </div>
         <div
