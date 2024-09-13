@@ -1,101 +1,231 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Image from "@tiptap/extension-image";
+import Underline from "@tiptap/extension-underline";
+import GlobalDragHandle from "tiptap-extension-global-drag-handle";
+import Placeholder from "@tiptap/extension-placeholder";
+import { Button } from "@/components/ui/button";
+import {
+  Bold,
+  Italic,
+  List,
+  ListOrdered,
+  Heading,
+  Image as ImageIcon,
+  Code,
+  ChevronDown,
+} from "lucide-react";
+import { SnippetExtension } from "@/components/SnippetExtension";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
+interface Snippet {
+  id: string;
+  content: string;
+}
+
+type HeadingLevel = 1 | 2 | 3;
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [snippets] = useState([
+    { id: "heading", content: "<h2>Heading</h2>" },
+    { id: "paragraph", content: "<p>Paragraph</p>" },
+    { id: "bulletList", content: "<ul><li>List item</li></ul>" },
+    { id: "orderedList", content: "<ol><li>Ordered item</li></ol>" },
+  ]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: "Type here...",
+      }),
+      Image,
+      SnippetExtension,
+      Underline,
+      GlobalDragHandle.configure({
+        dragHandleWidth: 24,
+        scrollTreshold: 50,
+      }),
+    ],
+    content: "<p></p>",
+    editorProps: {
+      attributes: {
+        class: "prose focus:outline-none max-w-full",
+      },
+    },
+    onUpdate: ({ editor }) => {
+      const html = editor.getHTML();
+      console.log("Editor content updated:", html);
+    },
+  });
+
+  const isActive = (type: string) => {
+    if (!editor) return false;
+    switch (type) {
+      case "bold":
+        return editor.isActive("bold");
+      case "italic":
+        return editor.isActive("italic");
+      case "bulletList":
+        return editor.isActive("bulletList");
+      case "orderedList":
+        return editor.isActive("orderedList");
+      case "heading":
+        return editor.isActive("heading", { level: 2 });
+      default:
+        return false;
+    }
+  };
+
+  const addBlock = (type: string) => {
+    if (editor) {
+      switch (type) {
+        case "paragraph":
+          editor.chain().focus().setParagraph().run();
+          break;
+        case "heading":
+          editor.chain().focus().toggleHeading({ level: 2 }).run();
+          break;
+        case "bulletList":
+          editor.chain().focus().toggleBulletList().run();
+          break;
+        case "orderedList":
+          editor.chain().focus().toggleOrderedList().run();
+          break;
+        case "image":
+          const url = window.prompt("Enter the URL of the image:");
+          if (url) {
+            editor.chain().focus().setImage({ src: url }).run();
+          }
+          break;
+      }
+    }
+  };
+
+  const setHeading = (level: HeadingLevel) => {
+    editor?.chain().focus().toggleHeading({ level }).run();
+  };
+
+  const onDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    snippet: Snippet
+  ) => {
+    event.dataTransfer.setData("snippet", snippet.content);
+  };
+
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-100 p-8 flex">
+      <div className="max-w-4xl mx-auto flex-grow">
+        <h1 className="text-4xl font-bold text-gray-800 mb-8">Block Editor</h1>
+        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-4">
+          <div className="flex items-center p-2 bg-gray-50 border-b">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              className={isActive("bold") ? "bg-gray-200" : ""}
+            >
+              <Bold
+                className={`h-4 w-4 ${isActive("bold") ? "text-blue-500" : ""}`}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              className={isActive("italic") ? "bg-gray-200" : ""}
+            >
+              <Italic
+                className={`h-4 w-4 ${
+                  isActive("italic") ? "text-blue-500" : ""
+                }`}
+              />
+            </Button>
+            <div className="border-l border-gray-300 h-6 mx-2" />
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="flex items-center">
+                  <Heading className="h-4 w-4 mr-1" />
+                  <ChevronDown className="h-3 w-3" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {([1, 2, 3] as HeadingLevel[]).map((level) => (
+                  <DropdownMenuItem
+                    key={level}
+                    onSelect={() => setHeading(level)}
+                  >
+                    Heading {level}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="border-l border-gray-300 h-6 mx-2" />
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().toggleBulletList().run()}
+              className={isActive("bulletList") ? "bg-gray-200" : ""}
+            >
+              <List
+                className={`h-4 w-4 ${
+                  isActive("bulletList") ? "text-blue-500" : ""
+                }`}
+              />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              className={isActive("orderedList") ? "bg-gray-200" : ""}
+            >
+              <ListOrdered
+                className={`h-4 w-4 ${
+                  isActive("orderedList") ? "text-blue-500" : ""
+                }`}
+              />
+            </Button>
+            <div className="border-l border-gray-300 h-6 mx-2" />
+            <Button variant="ghost" size="sm" onClick={() => addBlock("image")}>
+              <ImageIcon className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+        <div
+          className="bg-white rounded-sm shadow-lg overflow-hidden"
+          style={{ aspectRatio: "1 / 1.4142" }}
         >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+          <EditorContent
+            editor={editor}
+            className="prose max-w-none p-16 h-full overflow-y-auto"
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </div>
+      </div>
+      <div className="w-64 ml-8 bg-white rounded-lg shadow-md p-4 snippet-sidebar">
+        <h2 className="text-lg font-semibold mb-4">Snippets</h2>
+        {snippets.map((snippet) => (
+          <div
+            key={snippet.id}
+            className="snippet-item mb-2 cursor-move"
+            draggable
+            onDragStart={(e) => onDragStart(e, snippet)}
+          >
+            {snippet.id}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
