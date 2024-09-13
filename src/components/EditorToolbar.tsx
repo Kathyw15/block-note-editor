@@ -32,13 +32,17 @@ interface EditorToolbarProps {
 
 const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, addBlock }) => {
   const setHeading = (level: number) => {
+    let defaultText = `Heading ${level}`;
+
     editor
       ?.chain()
       .focus()
       .toggleHeading({ level: level as HeadingLevel })
+      .insertContent(defaultText)
+      .selectTextblockEnd() // This selects the entire inserted text
       .run();
   };
-
+  
   return (
     <div className="flex items-center p-2 bg-gray-50 border-b">
       {/* Text Formatting */}

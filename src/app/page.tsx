@@ -53,7 +53,7 @@ export default function Home() {
       Image,
       SnippetExtension,
       Underline,
-      Table.configure({ resizable: true }),
+      Table.configure({ resizable: true, allowTableNodeSelection: true }),
       TableRow,
       TableHeader,
       CustomTableCell,
