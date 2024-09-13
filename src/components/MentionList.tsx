@@ -74,3 +74,5 @@ export const MentionList = forwardRef<MentionListRef, MentionListProps>(
     );
   }
 );
+
+MentionList.displayName = "MentionList";

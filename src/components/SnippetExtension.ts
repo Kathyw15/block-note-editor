@@ -15,7 +15,7 @@ export const SnippetExtension = Extension.create({
     return [
       new Plugin({
         props: {
-          handleDrop(view, event: DragEvent | any): boolean {
+          handleDrop(view, event: DragEvent): boolean {
             if (!event) return false;
 
             event.preventDefault();
@@ -25,7 +25,9 @@ export const SnippetExtension = Extension.create({
               top: event.clientY,
             });
 
-            const snippetContent = event.dataTransfer.getData("snippet");
+            const snippetContent = event.dataTransfer
+              ? event.dataTransfer.getData("snippet")
+              : "";
 
             const parsedContent = DOMParser.fromSchema(
               view.state.schema
