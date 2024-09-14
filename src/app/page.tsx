@@ -16,12 +16,13 @@ import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
 import Superscript from "@tiptap/extension-superscript";
-import GlobalDragHandle from "tiptap-extension-global-drag-handle";
 import Placeholder from "@tiptap/extension-placeholder";
+import DragHandle from "@tiptap-pro/extension-drag-handle";
 import { SnippetExtension } from "@/components/SnippetExtension";
 import suggestion from "@/components/suggestion";
 import EditorToolbar from "@/components/EditorToolbar";
 import SnippetSidebar from "@/components/SnippetSidebar";
+import UniqueID from "@tiptap-pro/extension-unique-id";
 
 const CustomTableCell = TableCell.extend({
   addAttributes() {
@@ -57,13 +58,18 @@ export default function Home() {
       Table.configure({ resizable: true, allowTableNodeSelection: true }),
       TableRow,
       TableHeader,
+      DragHandle.configure({
+        render() {
+          const element = document.createElement("div");
+
+          element.classList.add("custom-drag-handle");
+
+          return element;
+        },
+      }),
       CustomTableCell,
       Highlight,
       Superscript,
-      GlobalDragHandle.configure({
-        dragHandleWidth: 24,
-        scrollTreshold: 50,
-      }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
         alignments: ["left", "center", "right", "justify"],
@@ -75,6 +81,9 @@ export default function Home() {
       Dropcursor.configure({
         width: 2,
       }),
+      UniqueID.configure({
+        types: ["heading", "paragraph"],
+      }),
     ],
 
     content: "",
@@ -82,7 +91,7 @@ export default function Home() {
       attributes: { class: "prose focus:outline-none max-w-full" },
     },
     onUpdate: ({ editor }) => {
-      const html = editor.getJSON();
+      const html = editor.getHTML();
       console.log("Editor content updated:", html);
     },
   });
