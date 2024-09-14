@@ -2,6 +2,7 @@
 - Snippets: https://github.com/sereneinserenade/tiptap-snippets-extension?tab=readme-ov-file 
 - Novel Block Editor: https://github.com/steven-tey/novel -
 - TipTap: https://tiptap.dev/docs/examples 
+- block editor sample: https://templates.tiptap.dev/phGWznCC8z 
 - Create custom extension: https://geekyants.com/en-us/blog/how-to-create-a-custom-extension-in-tiptap-wysiwyg-editor 
 - https://achromatic.dev/
 - good drag handle with copy / other compands: https://templates.tiptap.dev/dGbQhw8mcF 
