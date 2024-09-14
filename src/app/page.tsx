@@ -23,6 +23,7 @@ import suggestion from "@/components/suggestion";
 import EditorToolbar from "@/components/EditorToolbar";
 import SnippetSidebar from "@/components/SnippetSidebar";
 import UniqueID from "@tiptap-pro/extension-unique-id";
+import Heading from "@tiptap/extension-heading";
 
 const CustomTableCell = TableCell.extend({
   addAttributes() {
@@ -51,13 +52,18 @@ export default function Home() {
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Placeholder.configure({ placeholder: "Start writing your report..." }),
+      Placeholder.configure({
+        placeholder: "Start typing your report...",
+      }),
       Image,
       SnippetExtension,
       Underline,
       Table.configure({ resizable: true, allowTableNodeSelection: true }),
       TableRow,
       TableHeader,
+      Heading.configure({
+        levels: [1, 2, 3],
+      }),
       DragHandle.configure({
         render() {
           const element = document.createElement("div");
