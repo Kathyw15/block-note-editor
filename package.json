@@ -1,6 +1,6 @@
 {
-  "name": "notion-editor",
-  "version": "0.1.0",
+  "name": "block-note-editor",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
