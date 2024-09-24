@@ -14,8 +14,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Block Editor",
-  description: "Report Editor Builder",
+  title: "Block Note Editor",
+  description: "Report Note Editor",
 };
 
 export default function RootLayout({

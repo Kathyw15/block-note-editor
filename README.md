@@ -4,7 +4,7 @@ BlockNote is a powerful, customizable rich text editor with block-based editing 
 
 ## Demo
 
-You can view a live demo of the Block Note Editor at [https://www.test.com]
+You can view a live demo of the Block Note Editor at [https://block-note-editor.vercel.app/]
 
 ## Features
 

@@ -146,7 +146,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-100 p-8 flex">
       <div className="max-w-4xl mx-auto flex-grow">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8">Block Editor</h1>
+        <h1 className="text-4xl font-bold text-gray-800 mb-8">
+          Block Note Editor
+        </h1>
         <div className="bg-white rounded-lg shadow-md overflow-hidden mb-4">
           <EditorToolbar editor={editor} addBlock={addBlock} />
         </div>
