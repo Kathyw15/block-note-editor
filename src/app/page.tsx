@@ -1,5 +1,3 @@
-// pages/Home.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -18,12 +16,13 @@ import Highlight from "@tiptap/extension-highlight";
 import Superscript from "@tiptap/extension-superscript";
 import Placeholder from "@tiptap/extension-placeholder";
 import DragHandle from "@tiptap-pro/extension-drag-handle";
-import { SnippetExtension } from "@/components/SnippetExtension";
-import suggestion from "@/components/suggestion";
-import EditorToolbar from "@/components/EditorToolbar";
-import SnippetSidebar from "@/components/SnippetSidebar";
+import { SnippetExtension } from "@/components/snippets/SnippetExtension";
+import suggestion from "@/components/mentions/suggestion";
+import SnippetSidebar from "@/components/snippets/SnippetSidebar";
 import UniqueID from "@tiptap-pro/extension-unique-id";
 import Heading from "@tiptap/extension-heading";
+import { DraggableItemExtension } from "@/components/draggable-item/DraggableItemExtension";
+import EditorToolbar from "@/components/toolbar/EditorToolbar";
 
 const CustomTableCell = TableCell.extend({
   addAttributes() {
@@ -47,15 +46,21 @@ export default function Home() {
     { id: "paragraph", content: "<p>Paragraph</p>" },
     { id: "bulletList", content: "<ul><li>List item</li></ul>" },
     { id: "orderedList", content: "<ol><li>Ordered item</li></ol>" },
+    {
+      id: "draggableItem",
+      content:
+        '<div data-type="draggable-item"><p>New draggable item</p></div>',
+    },
   ]);
 
   const editor = useEditor({
     extensions: [
       StarterKit,
       Placeholder.configure({
-        placeholder: "Start typing your report...",
+        placeholder: "Start typing your document...",
       }),
       Image,
+      DraggableItemExtension,
       SnippetExtension,
       Underline,
       Table.configure({ resizable: true, allowTableNodeSelection: true }),
@@ -97,7 +102,7 @@ export default function Home() {
       attributes: { class: "prose focus:outline-none max-w-full" },
     },
     onUpdate: ({ editor }) => {
-      const html = editor.getHTML();
+      const html = editor.getJSON();
       console.log("Editor content updated:", html);
     },
   });

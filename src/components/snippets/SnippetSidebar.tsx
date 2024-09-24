@@ -1,5 +1,3 @@
-// components/SnippetSidebar.tsx
-
 interface Snippet {
   id: string;
   content: string;
